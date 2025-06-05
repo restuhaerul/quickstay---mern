@@ -1,24 +1,21 @@
 import express from "express";
-import "dotenv/config";
 import cors from "cors";
+import "dotenv/config";
 import connectDB from "./configs/db.js";
-import {clerkMiddleware} from "@clerk/express";
+import { clerkMiddleware } from "@clerk/express";
 import clerkWebHooks from "./controllers/clerkWebHooks.js";
 
-connectDB();
+const app = express();
 
-const app = express()
-app.use(cors())
+// ✅ Harus pakai raw di endpoint Clerk webhook
+app.use("/api/clerk", express.raw({ type: "*/*" }), clerkWebHooks);
 
-// Middleware
-app.use(express.json())
-app.use(clerkMiddleware())
+// Middleware lainnya
+app.use(cors());
+app.use(express.json());
+app.use(clerkMiddleware());
 
-// API to listen to Clerk Webhooks
-app.use("/api/clerk", clerkWebHooks);
-
-app.get('/', (req, res) => res.send("API berjalan dengan baik"))
+app.get("/", (req, res) => res.send("API berjalan dengan baik"));
 
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => console.log(`Server berjalan di port ${PORT}`));
