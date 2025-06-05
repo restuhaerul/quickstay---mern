@@ -3,9 +3,9 @@ import "dotenv/config";
 import cors from "cors";
 import connectDB from "./configs/db.js";
 import {clerkMiddleware} from "@clerk/express";
-import clerkWebHooks from "./controllers/clerkWebHooks";
+import clerkWebHooks from "./controllers/clerkWebHooks.js";
 
-connectDB()
+connectDB();
 
 const app = express()
 app.use(cors())
